@@ -1,4 +1,4 @@
-window.addEventListener('load', function(e) {
+window.addEventListener('DOMContentLoaded', function(e) {
     window.focus();
     let snakePositions;
     let applePosition;
@@ -161,7 +161,88 @@ window.addEventListener('load', function(e) {
         console.log(`Snake stteping into tile: ${newHeadPosition}`);
         snakePositions.push(newHeadPosition);
         console.log(`Snake is now in tile: ${newHeadPosition}`);
+        snakePositions.push(newHeadPosition);
+        const previousTail=tiles[snakePositions[0]];
+        setTile(previousTail);
+        if(newHeadPosition!=applePosition){
+            snakePositions.shift();
+            const tail=tiles[snakePositions[0]];
+            const tailDi=tailDirection();
+            const tailValue=`${100-(percentageOfStep*100)}%`;
+            if(tailDi=='right'){
+                setTile(tail,{
+                    left:0,
+                    width:tailValue,
+                    'background-color':color,
+                });
+            }
+            if(tailDi=='left'){
+                setTile(tail,{
+                    right:0,
+                    width:tailValue,
+                    'background-color':color,
+                });
+            }
+            if(tailDi=='up'){
+                setTile(tail,{
+                    bottom:0,
+                    height:tailValue,
+                    'background-color':color,
+                });
+            }
+            if(tailDi=='down'){
+                setTile(tail,{
+                    top:0,
+                    height:tailValue,
+                    'background-color':color,
+                });
+            }
+        }
+        const previousHead=tiles[snakePositions[snakePositions.length-2]];
+        setTile(previousHead,{
+            'background-color':color,
+        });
+        const head=tites[newHeadPosition];
+        const headDi=headDirection();
+        const headValue=`${percentageOfStep*100}%`;
+        if(headDi=='right'){
+            setTile(head,{
+                left:0,
+                width:headValue,
+                'background-color':color,
+                'border-radius':'0',
+            });
+        }
+        if(headDi=='left'){
+            setTile(head,{
+                right:0,
+                width:headValue,
+                'background-color':color,
+                'border-radius':'0',
+            });
+        }
+        if(headDi=='up'){
+            setTile(head,{
+                bottom:0,
+                height:headValue,
+                'background-color':color,
+                'border-radius':'0',
+            });
+        }
+        if(headDi=='down'){
+            setTile(head,{
+                top:0,
+                height:headValue,
+                'background-color':color,
+                'border-radius':'0',
+            });
+        }
     };
+    function tailDirection(){
+        const tail1=snakePositions[0];
+        const tail2=snakePositions[1];
+        return getDirection(tail1,tail2);
+    }
     function getNextPosition(){
         //hay que completar despues del if
         const headPosition=snakePositions[snakePositions.length-1];
@@ -218,6 +299,26 @@ window.addEventListener('load', function(e) {
         const tail2=snakePositions[1];
         return getDirection(tail1,tail2);
     };
+    function transition(percentageOfStep){
+        const head=tiles[snakePositions[snakePositions.length-1]];
+        const headDi=headDirection();
+        const headValue=`${percentageOfStep*100}%`;
+        if(headDi=='right'||headDi=='left'){
+            head.style.width=headValue;
+        }
+        if(headDi=='up'||headDi=='down'){
+            head.style.height=headValue;
+        }
+        const tail=tiles[snakePositions[0]];
+        const tailDi=tailDirection();
+        const tailValue=`${100-(percentageOfStep*100)}%`;
+        if(tailDi=='right'||tailDi=='left'){
+            tail.style.width=tailValue;
+        }
+        if(tailDi=='up'||tailDi=='down'){
+            tail.style.height=tailValue;
+        }
+    }
     function getDirection(first,second){
         if(first-1==second){
             return 'right';
@@ -231,5 +332,6 @@ window.addEventListener('load', function(e) {
         if(first-width==second){
             return 'up';
         }
+        throw Error('Invalid direction');
     }
 }); // DOMContentLoaded
