@@ -285,7 +285,49 @@ window.addEventListener('DOMContentLoaded', (e) => {
     function getNextPostion(){
         const headPosition=snakePositions[snakePositions.length-1];
         const snakeDirenction=inputs.shift()||headDirection();
-    };
+        switch(snakeDirenction){
+            case 'right':{
+                const  nextPosition=headPosition+1;
+                if(nextPosition%width==0){
+                    throw Error('Snake hit right wall');
+                }
+                if(snakePositions.slice(1).includes(nextPosition)){
+                    throw new Error('Snake hit itself');
+                }
+                return nextPosition;
+            }
+            case 'left':{
+                const nextPosition=headPosition-1;
+                if(nextPosition%width==width-1||nextPosition<0){
+                    throw new Error('Snake hit left wall');
+                }
+                if(snakePositions.slice(1).includes(nextPosition)){
+                    throw new Error('Snake hit itself');
+                }
+                return nextPosition;
+            }
+            case 'up':{
+                const nextPosition=headPosition-width;
+                if(nextPosition<0){
+                    throw new Error('Snake hit top wall');
+                }
+                if(snakePositions.slice(1).includes(nextPosition)){
+                    throw new Error('Snake hit itself');
+                }
+                return nextPosition;
+            }
+            case 'down':{
+                const nextPosition=headPosition+width;
+                if(nextPosition>=width*height-1){
+                    throw new Error('Snake hit bottom wall');
+                }
+                if(snakePositions.slice(1).includes(nextPosition)){
+                    throw new Error('Snake hit itself');
+                }
+                return nextPosition;
+            }
+        };
+    }
     function headDirection(){
         const head=snakePositions[snakePositions.length-1];
         const neck=snakePositions[snakePositions.length-2];
